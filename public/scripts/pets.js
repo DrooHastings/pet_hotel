@@ -1,12 +1,12 @@
-console.log('JS up ');
 $(document).ready(onReady);
 
 
 function onReady (){
-  console.log('js and jq up');
 // event listeners
 $('#register').on('click', registerOwners);
   appendOwners();
+$('#addPetButton').on('click', addPet);
+  getAllPets();
 }
 
 
@@ -36,8 +36,36 @@ $.ajax ({
       $('#owners-name').append('<option>' + response[i] + '</option>');
     }
     console.log(response);
-    console.log(response.length);
-    $('.container').append($('#owners-name').val());
   }//end success
 });//end GET
 }//end appendOwners
+
+function addPet (){
+  petToSend = {
+    owner : $('#owners-name').val(),
+    pet : $('#pet-name').val(),
+    color : $('#color').val(),
+    breed : $('#breed').val(),
+  };// end petToSend
+
+  $.ajax ({
+    url: "/addPet",
+    type: 'POST',
+    data: petToSend,
+    success: function (response){
+
+    }
+  });//end POST
+}//end addPet
+
+function getAllPets() {
+  $.ajax ({
+    url: "/getAllPets",
+    type: 'GET',
+    success: function (response){
+      console.log('response from client getAllPets(): ', response);
+      $('#petsTable').append(response);
+      // magical row appending here
+    } //end success
+  }); //end ajax
+} //end getallpets
