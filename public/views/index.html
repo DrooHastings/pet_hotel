@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <script src="/vendors/jquery.min.js" charset="utf-8"></script>
-    <script src="/scripts/pets.js" charset="utf-8"></script>
+    <script src="views/scripts/pets.js" charset="utf-8"></script>
     <!-- <link rel="stylesheet" href="vendors/styles.css"> -->
     <title>Owners and Pets</title>
   </head>
@@ -29,13 +29,10 @@
     <h3> Breed </h3>
     <input id="breed" type= 'text' value="" placeholder="text">
     <button id="addPetButton">Add Pet</button>
+    <button id="deletePetButton" data-idNum = "1">Delete Pet</button>
 
-    <div class = 'petsTable'>
-      <TABLE BORDER="5"    WIDTH="50%"   CELLPADDING="4" CELLSPACING="3">
-     <TR>
-        <!-- <TH COLSPAN="2"><BR><H3>TABLE TITLE</H3> -->
-        <!-- </TH> -->
-     </TR>
+    <div >
+      <TABLE BORDER="5"  class = 'petsTable'   WIDTH="50%"   CELLPADDING="4" CELLSPACING="3">
      <TR>
         <TH>Owner</TH>
         <TH>Pet</TH>
@@ -44,18 +41,8 @@
         <TH>Update </TH>
         <TH>Delete </TH>
         <TH>Check In/Out</TH>
-
-     </TR>
-     <TR ALIGN="CENTER">
-        <TD>Data 1</TD>
-        <TD>Data 2</TD>
-        <TD>Data 3</TD>
-        <TD>Data 4</TD>
-        <TD>Data 5</TD>
-        <TD>Data 6</TD>
-        <TD>Data 7</TD>
-     </TR>
-   </TABLE>
+    </TR>
+    </TABLE>
  </div>
 
   </body>

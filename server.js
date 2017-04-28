@@ -53,7 +53,6 @@ app.post('/registerOwners', function(req, res){
 });
 
 app.post ('/addPet', function(req, res){
-  console.log('req.body');
   pool.connect(function ( err, connection, done){
     if (err) {
       res.send( 400 );
@@ -80,6 +79,7 @@ app.get('/getAllPets', function(req, res){
     else {
       console.log('connected to the db in /getAllPets');
       var petSet = connection.query("SELECT * from pets");
+      allPets= [];
       petSet.on('row', function(row){
         allPets.push(row);
       }); //end on row magic
@@ -92,3 +92,16 @@ app.get('/getAllPets', function(req, res){
 
 
 });//end get pets aJaz
+
+app.delete('/deletePets/:id', function(req, res){
+  console.log('this is req.params.id field', req.params.id);
+  pool.connect (function ( err, connection, done ){
+    if (err){
+      res.send( 400 );
+    } else {
+      connection.query("DELETE FROM pets WHERE id=$1", [req.params.id]);
+      done();
+      res.send("deleted");
+    }//end else
+  });
+});
