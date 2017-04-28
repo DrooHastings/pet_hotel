@@ -18,7 +18,7 @@ var config = {
 
 
 // uses
-app.use(express.static('public/views'));
+app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 
 
@@ -27,3 +27,8 @@ app.listen (port, function(){
   console.log('server up on:', port);
 
 });// end app.listen
+
+app.get('/', function(req, res){
+  console.log('/ hit');
+  res.sendFile(path.resolve('public/views/index.html'));
+});
