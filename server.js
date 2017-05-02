@@ -9,7 +9,7 @@ var bodyParser = require ('body-parser');
 var port = 8888;
 
 var config = {
-  database: 'pet_hotel',
+  database: 'Pet_hotel_2',
   host: 'localhost',
   port: 5432,
   max: 12
@@ -19,7 +19,7 @@ var pool = new pg.Pool ( config );
 
 //globals
 var ownersArray = ['Tessa', 'Zee', 'Amy', 'Droo'];
-var allPets = [];
+
 
 
 
@@ -41,15 +41,40 @@ app.get('/', function(req, res){
 
 app.get('/getOwners', function(req, res){
   console.log('/getOwners hit');
-  res.send(ownersArray);
+  pool.connect(function ( err, connection, done){
+    if (err) {
+      res.send( 400 );
+    } else {
+      var resultSet = connection.query("SELECT * FROM owner");
+      var allOwners= [];
+        resultSet.on('row', function(row){
+        allOwners.push(row);
 
-});// end app.get
+        }); //end on row magic
+        resultSet.on('end', function(){
+        done();
+        console.log(allOwners);
+        res.send( allOwners );
+      });
+    }//end else
+  });// end pool connect
+  });// end app.get
 
 app.post('/registerOwners', function(req, res){
   console.log('/registerOwners hit');
-  ownersArray.push(req.body.name);
-  console.log(ownersArray);
-  res.send(ownersArray);
+  // ownersArray.push(req.body.name);
+  // console.log(ownersArray);
+  // res.send(ownersArray);
+  pool.connect(function ( err, connection, done){
+    if (err) {
+      res.send( 400 );
+    } else {
+      var resultSet = connection.query("INSERT INTO owner (name) values ($1)", [req.body.name]);
+
+      done();
+      res.sendStatus( 200);
+    }//end else
+  });// end pool connect
 });
 
 app.post ('/addPet', function(req, res){
@@ -57,7 +82,9 @@ app.post ('/addPet', function(req, res){
     if (err) {
       res.send( 400 );
     } else {
-      var resultSet = connection.query("INSERT INTO pets (owner, pet, breed, color) values ($1, $2, $3, $4)", [req.body.owner, req.body.pet, req.body.breed, req.body.color]);
+      var resultSet = connection.query("INSERT INTO owner (name) values ($1); INSERT INTO pets (pet, breed, color) values ($2, $3, $4)", [req.body.owner, req.body.pet, req.body.breed, req.body.color]);
+
+
       console.log(resultSet.body);
       done();
       res.send( 200 );
@@ -67,9 +94,7 @@ app.post ('/addPet', function(req, res){
 
 
 app.get('/getAllPets', function(req, res){
-
-
-  console.log('/getAllPets hit');
+console.log('/getAllPets hit');
 
   pool.connect( function (err, connection, done){
     if (err){
@@ -78,7 +103,7 @@ app.get('/getAllPets', function(req, res){
     }
     else {
       console.log('connected to the db in /getAllPets');
-      var petSet = connection.query("SELECT * from pets");
+      var petSet = connection.query("SELECT FROM owner");
       allPets= [];
       petSet.on('row', function(row){
         allPets.push(row);
@@ -92,16 +117,16 @@ app.get('/getAllPets', function(req, res){
 
 
 });//end get pets aJaz
-
-app.delete('/deletePets/:id', function(req, res){
-  console.log('this is req.params.id field', req.params.id);
-  pool.connect (function ( err, connection, done ){
-    if (err){
-      res.send( 400 );
-    } else {
-      connection.query("DELETE FROM pets WHERE id=$1", [req.params.id]);
-      done();
-      res.send("deleted");
-    }//end else
-  });
-});
+//
+// app.delete('/deletePets/:id', function(req, res){
+//   console.log('this is req.params.id field', req.params.id);
+//   pool.connect (function ( err, connection, done ){
+//     if (err){
+//       res.send( 400 );
+//     } else {
+//       connection.query("DELETE FROM pet_hotel_2 WHERE id=$1", [req.params.id]);
+//       done();
+//       res.send("deleted");
+//     }//end else
+//   });
+// });
